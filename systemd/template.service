@@ -1,0 +1,15 @@
+# copy to ~/.config/systemd/user/
+# systemctl --user enable basic.service
+# systemctl --user start basic.service
+# systemctl --user --full edit basic.service
+
+[Unit]
+Description=Systemd Service First Try
+
+[Service]
+Type=simple
+ExecStart=/home/qi/bin/first.sh
+
+[Install]
+WantedBy=default.target
+# WantedBy=multi-user.target
