@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 2.8)
+
+#-------- SETUP: includes --------------
+# DEPRECATED:
+# include_directories(
+#   ${THRIFT_GENED_DIR}
+#   )
+
+
+#-------- SETUP: libraries --------------
+# DEPRECATED:
+# link_directories(/usr/local/lib)
+# target_link_libraries(server libthrift.a libthriftnb.a pthread)
