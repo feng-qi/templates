@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 
+#-------- SETUP: output directories for executable --------------
+# DEPRECATED:
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+
+
 #-------- SETUP: includes --------------
 # DEPRECATED:
 # include_directories(
