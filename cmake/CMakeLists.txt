@@ -15,6 +15,22 @@ set(THRIFT_GENED_SRCS
 set(THRIFT_ARGS --gen cpp ${CMAKE_SOURCE_DIR}/thrift/calculator.thrift)
 
 
+#-------- SETUP: compiler flags --------------
+# The DEFAULT(EMPTY) flags will not be inherited by {DEBUG,RELEASE} flags
+# Use different flags according to ${CMAKE_BUILD_TYPE}
+set(CMAKE_C_FLAGS         "${CMAKE_C_FLAGS} -Wall -Werror")
+set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS_DEBUG} -O0 -Wall -Werror")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Wall -Werror")
+set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} -Wall -Werror")
+set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall -Werror")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -Werror")
+
+
+#-------- SETUP: linker flags --------------
+# set(LINKER_FLAGS "-v")
+# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LINKER_FLAGS}")
+
+
 #-------- SETUP: output directories --------------
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) # static libraries
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) # shared libraries
@@ -31,11 +47,6 @@ add_executable(server
   server.cpp
   ${THRIFT_GENED_SRCS}
   )
-
-
-#-------- SETUP: linker flags --------------
-# set(LINKER_FLAGS "-v")
-# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LINKER_FLAGS}")
 
 
 #-------- SETUP: includes --------------
