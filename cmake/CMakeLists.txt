@@ -1,8 +1,12 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.8)
 project(Calculator)
 
 #-------- SETUP: variables --------------
 # set(BOOST_INCLUDE_DIR /usr/include/boost)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)   # default ON
+
 set(THRIFT_INCLUDE_DIR
   /usr/local/include/thrift)
 set(THRIFT_GENED_DIR
@@ -35,6 +39,10 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -Werror")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) # static libraries
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib) # shared libraries
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) # executables
+
+
+#-------- SETUP: enable testing --------------
+enable_testing()
 
 
 #-------- SETUP: shell commands --------------
