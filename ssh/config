@@ -1,0 +1,14 @@
+Host jump
+     User fengqi
+     ForwardAgent yes
+     HostName <IP-Address>
+     Port 22
+
+Host compile.game
+     User fengqi
+     HostName <IP-Address>
+     Port 22
+     ProxyCommand ssh jump -W %h:%p
+     IdentityFile ~/.ssh/id_rsa
+     ServerAliveInterval 180    # seconds
+     ServerAliveCountMax 30
