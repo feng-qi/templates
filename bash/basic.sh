@@ -60,7 +60,7 @@ package_installed () {
 }
 
 
-#-------------- loop -------------------------
+#-------------- loop & switch -------------------------
 # while
 while [ $# -gt 0 ]; do
     case "$1" in
