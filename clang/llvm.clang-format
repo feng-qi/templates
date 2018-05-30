@@ -1,0 +1,15 @@
+Language:        Cpp
+BasedOnStyle:  LLVM
+AccessModifierOffset: -4
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignEscapedNewlines: Left
+AllowAllParametersOfDeclarationOnNextLine: false
+BinPackArguments: false
+BinPackParameters: false
+ColumnLimit: 99
+ConstructorInitializerIndentWidth: 6
+IndentWidth:     4
+DerivePointerAlignment: false
+PointerAlignment: Left

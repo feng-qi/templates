@@ -12,3 +12,6 @@ Host compile.game
      IdentityFile ~/.ssh/id_rsa
      ServerAliveInterval 180    # seconds
      ServerAliveCountMax 30
+
+Host *
+     SendEnv LC_* LANG
