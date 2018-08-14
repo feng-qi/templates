@@ -75,7 +75,19 @@ while [ $# -gt 0 ]; do
     esac
 done
 
+
 # for
+#-----
+for ((n=0;n<10;n++)); do
+    echo "hello world $n"
+done
+
+#-----
+for i in {1..10}; do
+    echo "hello world $i"
+done
+
+#-----
 for pkg in ${pkgs[@]}; do
     if ! package_installed ${pkg} ; then
         echo -e "${INFO} ${COLR_GREEN}${pkg}${COLR_NC} installing"
