@@ -46,8 +46,13 @@ function myfunc() {
     # $0 代表被调用者自身的名字
     # $@ 代表所有参数，类型是个数组，想传递所有参数给其他命令用 cmd "$@"
     # $* 空格链接起来的所有参数，类型是字符串
+    local x=$1
+    local y=$2
     {shell commands ...}
 }
+
+# call a function
+myfunc arg1 arg2
 
 # useful functions
 command_exists () {

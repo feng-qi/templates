@@ -18,7 +18,7 @@ add_library(mylib
 target_include_directories(mylib PUBLIC include)
 target_include_directories(mylib PRIVATE include)
 
-target_compile_options(mylib -Wextra -Wconversion)
+target_compile_options(mylib -Wextra -Wconversion -Wsign-conversion)
 
 if (SOME_PUBLIC_SETTING)
   target_compile_definitions(mylib
