@@ -45,9 +45,25 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) # executables
 enable_testing()
 
 
-#-------- SETUP: shell commands --------------
+#-------- SETUP: run programs --------------
+#-- at configure time --
 execute_process(COMMAND thrift ${THRIFT_ARGS})
 # file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/thirft)
+
+#-- at build time --
+add_custom_command(
+  OUTPUT  "${CMAKE_CURRENT_BINARY_DIR}/gen-cpp/ThriftRPC.cpp"
+  COMMAND echo "running thrift..."
+  COMMAND thrift -r -strict --gen cpp -o ${THRIFT_DIR} ${THRIFT_FILE}
+  DEPENDS some_target)
+
+# If the OUTPUT of add_custom_command is not dependent by any target, it won't
+# run. So we add a custom_target.
+add_custom_target(
+  generate_header
+  ALL
+  DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/gen-cpp/ThriftRPC.cpp")
+
 
 
 #-------- SETUP: executable --------------
