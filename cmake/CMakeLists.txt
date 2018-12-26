@@ -54,8 +54,8 @@ execute_process(COMMAND thrift ${THRIFT_ARGS})
 add_custom_command(
   OUTPUT  "${CMAKE_CURRENT_BINARY_DIR}/gen-cpp/ThriftRPC.cpp"
   COMMAND echo "running thrift..."
-  COMMAND thrift -r -strict --gen cpp -o ${THRIFT_DIR} ${THRIFT_FILE}
-  DEPENDS some_target)
+  COMMAND thrift -r -strict --gen cpp -o ${THRIFT_GEN_DIR} ${THRIFT_FILE}
+  DEPENDS ${THRIFT_FILE})
 
 # If the OUTPUT of add_custom_command is not dependent by any target, it won't
 # run. So we add a custom_target.
