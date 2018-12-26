@@ -65,6 +65,30 @@ add_custom_target(
   DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/gen-cpp/ThriftRPC.cpp")
 
 
+#-------- SETUP: function --------------
+function(complex)
+  cmake_parse_arguments(
+    COMPLEX_PREFIX
+    "OPTION1;OPTION2"
+    "ONE_VALUE;ALSO_ONE_VALUE"
+    "MULTI_VALUES"
+    ${ARGN}
+    )
+  message("COMPLEX_PREFIX_OPTION1:        ${COMPLEX_PREFIX_OPTION1}")
+  message("COMPLEX_PREFIX_OPTION2:        ${COMPLEX_PREFIX_OPTION2}")
+  message("COMPLEX_PREFIX_ONE_VALUE:      ${COMPLEX_PREFIX_ONE_VALUE}")
+  message("COMPLEX_PREFIX_ALSO_ONE_VALUE: ${COMPLEX_PREFIX_ALSO_ONE_VALUE}")
+  message("COMPLEX_PREFIX_MULTI_VALUES:   ${COMPLEX_PREFIX_MULTI_VALUES}")
+  # message("ARGV: ${ARGV}\nARGN: ${ARGN}")
+endfunction()
+
+complex(
+  OPTION1
+  OPTION2
+  ONE_VALUE      value
+  ALSO_ONE_VALUE value2
+  MULTI_VALUES   some other values hello)
+
 
 #-------- SETUP: executable --------------
 add_executable(server
