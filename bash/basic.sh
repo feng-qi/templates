@@ -32,6 +32,16 @@ n<&-                               # 关闭作为输入的文件描述符 n
 diff <(cmd1) <(cmd2)               # 比较两个命令的输出
 
 
+#-------------- assignment -------------------------
+# Leading colon, see https://www.gnu.org/software/bash/manual/bashref.html#Bourne-Shell-Builtins
+# Substitution: https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
+#     ${}   : Parameter Expansion(Substitution)
+#     $()   : Command Substitution
+#     $(()) : Arithmetic Expansion
+: ${CC="gcc"}                   # assign if CXX is ""
+: ${CXX:="g++"}                 # assign if CXX is "" or unset
+
+
 #-------------- condition -------------------------
 # 复杂条件判断，注意 || 和 && 是完全兼容 POSIX 的推荐写法
 if [ $x -gt 10 ] && [ $x -lt 20 ]; then
