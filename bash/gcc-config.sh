@@ -12,15 +12,16 @@ __GCC_SRC_PRISTINE_DIR=$HOME/repos/gcc-pristine
 __DEBUG_BUILD_DIR=$HOME/builds/debug
 __RELEASE_BUILD_DIR=$HOME/builds/release
 __PRISTINE_BUILD_DIR=$HOME/builds/pristine
+__DEFAULT_JOB_COUNT=30
 
-alias xgcc="${__DEBUG_BUILD_DIR}/gcc/xgcc -B${__DEBUG_BUILD_DIR}/gcc"
-alias xg++="${__DEBUG_BUILD_DIR}/gcc/xg++ -B${__DEBUG_BUILD_DIR}/gcc"
+alias xgcc-debug="${__DEBUG_BUILD_DIR}/gcc/xgcc -B${__DEBUG_BUILD_DIR}/gcc"
+alias xg++-debug="${__DEBUG_BUILD_DIR}/gcc/xg++ -B${__DEBUG_BUILD_DIR}/gcc"
 alias xgcc-release="${__RELEASE_BUILD_DIR}/gcc/xgcc -B${__RELEASE_BUILD_DIR}/gcc"
 alias xg++-release="${__RELEASE_BUILD_DIR}/gcc/xg++ -B${__RELEASE_BUILD_DIR}/gcc"
 alias xgcc-pristine="${__PRISTINE_BUILD_DIR}/gcc/xgcc -B${__PRISTINE_BUILD_DIR}/gcc"
 alias xg++-pristine="${__PRISTINE_BUILD_DIR}/gcc/xg++ -B${__PRISTINE_BUILD_DIR}/gcc"
-
-alias mkgcc-in="make  -j 30  -C"
+alias xgcc=xgcc-debug
+alias xg++=xg++-debug
 
 function check() {
     case $1 in
@@ -37,7 +38,8 @@ function check() {
     esac
     shift
 
-    make -C ${dir} -j 30 -k $@ check
+    bash -c "cd ${dir} && make -j ${__DEFAULT_JOB_COUNT} -k $@ check"
+    bash -c "cd ${dir} && ${__GCC_SRC_PRISTINE_DIR}/contrib/test_summary > test_summary.output"
 }
 
 function build() {
@@ -58,7 +60,7 @@ function build() {
     esac
     shift
 
-    make -C ${dir} -j 30 $@ \
+    bash -c "cd ${dir} && make -j ${__DEFAULT_JOB_COUNT} $@" \
         && echo -e "\n${build_type} build finish time: $(date '+%F %T')"
 }
 
