@@ -1,0 +1,28 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+
+\newcommand{\Golden}[1][+]{\ensuremath{\left(\frac{1#1\sqrt{5}}{2}\right)}}
+\newcommand{\GoldenPlusOne}[1]{\ensuremath{\left(1+\frac{1#1\sqrt{5}}{2}\right)}}
+
+\newenvironment{\MyMath}{\begin{align}}{\end{align}}
+
+\author{fengqi}
+\title{Spivak's torture test}
+
+\begin{document}
+
+\maketitle
+
+\begin{align*}
+  a_n &= a_{n-1}+a_{n-2} \\
+      &= \displaystyle\frac{\Golden{+}^{n-3}-\Golden{-}^{n-2}+\Golden{+}^{n-1}-\Golden{-}^{n-1}}{\sqrt{5}} \\
+      &= \displaystyle\frac{\Golden{+}^{n-1}\GoldenPlusOne{+}-\Golden{-}^{n-2}\GoldenPlusOne{-}}{\sqrt{5}}
+\end{align*}
+
+\begin{MyMath}
+  a_n &= a_{n-1}+a_{n-2} \\
+      &= \displaystyle\frac{\Golden{+}^{n-3}-\Golden{-}^{n-2}+\Golden{+}^{n-1}-\Golden{-}^{n-1}}{\sqrt{5}} \\
+      &= \displaystyle\frac{\Golden{+}^{n-1}\GoldenPlusOne{+}-\Golden{-}^{n-2}\GoldenPlusOne{-}}{\sqrt{5}}
+\end{MyMath}
+
+\end{document}
