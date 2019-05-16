@@ -88,3 +88,6 @@ function config() {
         --with-long-double-128 \
         ${bootstrap} --prefix=/tmp/gcc-tmpi"
 }
+
+# CFLAGS="-O0 -g3 -fno-inline" CXXFLAGS="-O0 -g3 -fno-inline" CFLAGS_FOR_BUILD="-O0 -g3 -fno-inline" CFLAGS_FOR_TARGET="-O0 -g3 -fno-inline" CXXFLAGS_FOR_BUILD="-O0 -g3 -fno-inline" CXXFLAGS_FOR_TARGET="-O0 -g3 -fno-inline" \
+#       ${__GCC_SRC_PRISTINE_DIR}/configure --enable-languages=all --with-cpu=power9 --disable-multilab --with-long-double-128 --prefix=/tmp/gcc-tmpi
