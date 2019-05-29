@@ -23,6 +23,34 @@ alias xg++-pristine="${__PRISTINE_BUILD_DIR}/gcc/xg++ -B${__PRISTINE_BUILD_DIR}/
 alias xgcc=xgcc-debug
 alias xg++=xg++-debug
 
+function makein() {
+    if [ $# -ne 2 ] && [ $# -ne 4 ]; then
+        echo "Usage:"
+        echo "    makein <directory> <target> [-j jobs]"
+        return 1
+    fi
+    bash -i -c "cd $1 \
+         && make -k -j ${__DEFAULT_JOB_COUNT} $2 $3 $4 \
+         && ${__GCC_SRC_PRISTINE_DIR}/contrib/test_summary > test_summary.output"
+}
+
+function clean() {
+    case $1 in
+        debug)
+            local dir=${__DEBUG_BUILD_DIR} ;;
+        release)
+            local dir=${__RELEASE_BUILD_DIR} ;;
+        pristine)
+            local dir=${__PRISTINE_BUILD_DIR} ;;
+        *)
+            echo "Usage:"
+            echo "    clean <debug|release|pristine>"
+            return 1 ;;
+    esac
+
+    bash -c "cd ${dir} && rm -rf *"
+}
+
 function check() {
     case $1 in
         debug)
@@ -84,10 +112,10 @@ function config() {
     bash -c "${debug_flags} ${src_dir}/configure \
         --enable-languages=all \
         --with-cpu=power9      \
-        --disable-multilab     \
+        --disable-multilib     \
         --with-long-double-128 \
         ${bootstrap} --prefix=/tmp/gcc-tmpi"
 }
 
 # CFLAGS="-O0 -g3 -fno-inline" CXXFLAGS="-O0 -g3 -fno-inline" CFLAGS_FOR_BUILD="-O0 -g3 -fno-inline" CFLAGS_FOR_TARGET="-O0 -g3 -fno-inline" CXXFLAGS_FOR_BUILD="-O0 -g3 -fno-inline" CXXFLAGS_FOR_TARGET="-O0 -g3 -fno-inline" \
-#       ${__GCC_SRC_PRISTINE_DIR}/configure --enable-languages=all --with-cpu=power9 --disable-multilab --with-long-double-128 --prefix=/tmp/gcc-tmpi
+#       ${__GCC_SRC_PRISTINE_DIR}/configure --enable-languages=all --with-cpu=power9 --disable-multilib --with-long-double-128 --prefix=/tmp/gcc-tmpi
