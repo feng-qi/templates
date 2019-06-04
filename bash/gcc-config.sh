@@ -73,14 +73,11 @@ function check() {
 function build() {
     case $1 in
         debug)
-            local build_type="debug"
-            local dir=${__DEBUG_BUILD_DIR} ;;
+            local build_dir=${__DEBUG_BUILD_DIR} ;;
         release)
-            local build_type="release"
-            local dir=${__RELEASE_BUILD_DIR} ;;
+            local build_dir=${__RELEASE_BUILD_DIR} ;;
         pristine)
-            local build_type="pristine"
-            local dir=${__PRISTINE_BUILD_DIR} ;;
+            local build_dir=${__PRISTINE_BUILD_DIR} ;;
         *)
             echo "Usage:"
             echo "    build <debug|release|pristine> [-j]"
@@ -88,19 +85,22 @@ function build() {
     esac
     shift
 
-    bash -c "cd ${dir} && make -j ${__DEFAULT_JOB_COUNT} $@" \
-        && echo -e "\n${build_type} build finish time: $(date '+%F %T')"
+    bash -c "cd ${build_dir} && make -j ${__DEFAULT_JOB_COUNT} $@" \
+        && echo -e "\nbuild finished(${build_dir}) time: $(date '+%F %T')"
 }
 
 function config() {
     case "$1" in
         debug)
+            local build_dir=${__DEBUG_BUILD_DIR}
             local src_dir=${__GCC_SRC_DIR}
             local debug_flags=${__DEBUG_FLAGS}
             local bootstrap="--disable-bootstrap" ;;
         release)
+            local build_dir=${__RELEASE_BUILD_DIR}
             local src_dir=${__GCC_SRC_DIR} ;;
         pristine)
+            local build_dir=${__PRISTINE_BUILD_DIR}
             local src_dir=${__GCC_SRC_PRISTINE_DIR} ;;
         *)
             echo "Usage:"
@@ -109,7 +109,13 @@ function config() {
     esac
     shift
 
-    bash -c "${debug_flags} ${src_dir}/configure \
+    if ! [ -z "$(ls -A ${build_dir})" ]; then
+        echo "Build directory (${build_dir}) is not empty"
+        return 2
+    fi
+
+    bash -c "cd ${build_dir} && \
+        ${debug_flags} ${src_dir}/configure \
         --enable-languages=all \
         --with-cpu=power9      \
         --disable-multilib     \
