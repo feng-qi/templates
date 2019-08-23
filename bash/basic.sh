@@ -8,7 +8,7 @@ COLR_GREEN='\033[0;32m'
 COLR_NC='\033[0m' # No Color
 
 WARN='\033[0;31m[WARN]\033[0m'
-INFO='\033[0;32m[WARN]\033[0m'
+INFO='\033[0;32m[INFO]\033[0m'
 
 
 #-------------- sort -------------------------
@@ -46,6 +46,22 @@ diff <(cmd1) <(cmd2)               # 比较两个命令的输出
 # 复杂条件判断，注意 || 和 && 是完全兼容 POSIX 的推荐写法
 if [ $x -gt 10 ] && [ $x -lt 20 ]; then
     echo "yes, between 10 and 20"
+fi
+
+if [ "$1" == "--dry-run" ]; then
+    dry_run=true
+    shift
+fi
+
+local file=$(realpath $1)
+if [ -z $file ]; then
+    return 1
+fi
+local filename=$(basename $file)
+local filename_no_ext=${filename%.*}
+if [ -z $filename_no_ext ]; then
+    echo "Can't parse filename"
+    return 1
 fi
 
 
@@ -117,6 +133,21 @@ while [ $# -gt 0 ]; do
             echo -e "${WARN} Unrecognized Argument: ${COLR_RED}$1${COLR_NC}"
             exit 1
             ;;
+    esac
+done
+
+local dry_run=false
+local need_compile=false
+while [[ "$1" =~ ^(-c|-d|--dry-run)$ ]]; do
+    case "$1" in
+        -c)
+            need_compile=true
+            shift ;;
+        -d|--dry-run)
+            dry_run=true
+            shift ;;
+        *)
+            break ;;
     esac
 done
 
