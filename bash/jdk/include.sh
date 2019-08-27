@@ -23,11 +23,18 @@ module="--add-modules jdk.incubator.vector"
 options_ig="-XX:PrintIdealGraphLevel=2 -XX:PrintIdealGraphAddress=127.0.0.1"
 
 Javac() {
-    $JAVAC $module $@
+    bash -c "$JAVAC $module $@"
 }
 
 Java() {
-    $JAVA $module $@
+    bash -c "$JAVA $module $@"
+}
+
+J() {
+    local filename=$1
+    local filename_no_ext=${filename%.*}
+    Javac $filename
+    Java  $filename_no_ext
 }
 
 Jshow() {
