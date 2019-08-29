@@ -33,8 +33,7 @@ Java() {
 J() {
     local filename=$1
     local filename_no_ext=${filename%.*}
-    Javac $filename
-    Java  $filename_no_ext
+    Javac $filename && Java $filename_no_ext
 }
 
 Jshow() {
