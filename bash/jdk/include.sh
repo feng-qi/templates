@@ -32,6 +32,10 @@ Java() {
 
 J() {
     local filename=$1
+    if ! [ -e $filename ]; then
+        echo "${WARN} $filename not exist"
+        return 1
+    fi
     local filename_no_ext=${filename%.*}
     Javac $filename && Java $filename_no_ext
 }
