@@ -11,7 +11,7 @@ igv() {
     cd -
 }
 
-export JAVA_HOME=$HOME/builds/panama-build/jdk
+export JAVA_HOME=$HOME/builds/panama-fast/images/jdk
 export JAVA=$JAVA_HOME/bin/java
 export JAVAC=$JAVA_HOME/bin/javac
 
