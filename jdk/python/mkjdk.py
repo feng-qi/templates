@@ -8,6 +8,7 @@ from pathlib import Path
 def print_comand(*args, **kwargs):
     pprint.pprint(locals())
 
+
 @click.command()
 @click.option('--src', '-s', default=Path('~/repos/panama').expanduser(),
               help='Assign OpenJDK source code directory')
@@ -21,7 +22,7 @@ def print_comand(*args, **kwargs):
 @click.option('--dry_run', default=False, is_flag=True, help='Only the show the command will be run')
 def make_jdk(src, des, debug_level, config_only, config_needed, target, dry_run):
 
-    run = print_comand if dry_run else p.check_call
+    run = print_comand if dry_run else check_call
 
     configure_cmd = [
         'bash',
