@@ -54,8 +54,4 @@ def run_jtreg(files, no_vector_api, dry_run, verbose, show_command):
 
 
 if __name__ == "__main__":
-
-    try:
-        run_jtreg()
-    except KeyboardInterrupt:
-        print("Ctrl-C received, terminated by user")
+    run_jtreg()

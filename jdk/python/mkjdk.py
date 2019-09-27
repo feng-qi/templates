@@ -42,8 +42,4 @@ def make_jdk(src, des, debug_level, config_only, config_needed, target, dry_run)
 
 
 if __name__ == "__main__":
-
-    try:
-        make_jdk()
-    except KeyboardInterrupt:
-        print("Ctrl-C received, terminated by user")
+    make_jdk()
