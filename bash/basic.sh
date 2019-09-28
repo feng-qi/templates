@@ -159,8 +159,10 @@ for ((n=0;n<10;n++)); do
 done
 
 #-----
-for i in {1..10}; do
-    echo "hello world $i"
+for i in {1..99..2}; do
+    if [ $(($i % 2)) -eq 1 ]; then
+        echo $i
+    fi
 done
 
 #-----
@@ -173,3 +175,21 @@ for pkg in ${pkgs[@]}; do
         echo -e "${WARN} ${COLR_RED}${pkg}${COLR_NC} already exists! Skipped!"
     fi
 done
+
+# select
+#-------
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes) echo Yess; break;;
+        No) echo Noo; break;;
+    esac
+done
+
+# read
+#-------
+read -p "Do you wish to install this program?(y/n) " yn
+case $yn in
+    [Yy]*) echo Yes ;;
+    [Nn]*) echo No  ;;
+    *) echo "Please answer yes or no." ;;
+esac
