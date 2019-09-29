@@ -10,13 +10,13 @@ def print_comand(*args, **kwargs):
 
 
 @click.command()
-@click.option('--no_vector_api', default=True, is_flag=True,
+@click.option('--vector_api/--no_vector_api', default=False, is_flag=True,
               help="Don't use Vector API, no Vector API by default")
 @click.option('--dry_run', default=False, is_flag=True, help='Only the show the command will be run')
 @click.option('--show_command', default=False, is_flag=True, help='Show the command will be run before running')
 @click.option('-v', '--verbose', default=False, is_flag=True, help='Enables verbose mode')
 @click.argument('files', nargs=-1, type=click.UNPROCESSED)
-def run_jtreg(files, no_vector_api, dry_run, verbose, show_command):
+def run_jtreg(files, vector_api, dry_run, verbose, show_command):
 
     run = print_comand if dry_run else check_call
 
@@ -28,7 +28,7 @@ def run_jtreg(files, no_vector_api, dry_run, verbose, show_command):
         quit(1)
 
     vmoptions = ['--add-modules', 'jdk.incubator.vector']
-    if no_vector_api:
+    if not vector_api:
         vmoptions.append('-XX:-UseVectorApiIntrinsics')
     if verbose:
         vmoptions += ['-XX:+UnlockDiagnosticVMOptions',
@@ -51,6 +51,8 @@ def run_jtreg(files, no_vector_api, dry_run, verbose, show_command):
         if not dry_run and show_command:
             pprint.pprint(cmd)
         run(cmd)
+
+    check_call(['date', '+%F %T'])
 
 
 if __name__ == "__main__":
