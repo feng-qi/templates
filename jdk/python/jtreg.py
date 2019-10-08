@@ -43,8 +43,8 @@ def run_jtreg(files, vector_api, dry_run, verbose, show_command):
         '-v:fail',
         # '-va',
         '-testjdk:' + str(home/'builds/panama-fast/images/jdk'),
-        '-r:' + str(home/'builds/JTReport'),
-        '-w:' + str(home/'builds/JTWork'),
+        '-r:' + str(home/'jtoutput/JTReport'),
+        '-w:' + str(home/'jtoutput/JTWork'),
     ]
 
     for cmd in [jtreg_cmd + [file] for file in files]:
