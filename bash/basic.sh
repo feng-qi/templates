@@ -193,3 +193,18 @@ case $yn in
     [Nn]*) echo No  ;;
     *) echo "Please answer yes or no." ;;
 esac
+
+# file
+#-----
+renaissance_data () {
+    local file=out.csv
+    local data
+
+    # local csv=$(sed 1d ${file})
+    while IFS=, read -r name score col3; do
+        data="${data}renaissance/${name},$score,nanos\n"
+    done <<< $(cat /home/qifen01/github/renaissance.out.csv)
+    # done <<< ${csv}
+
+    echo -n -e "${data}"
+}
