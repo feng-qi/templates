@@ -16,7 +16,8 @@ def print_comand(*args, **kwargs):
 @click.option('--debug_level', '-l', type=click.Choice(['fastdebug', 'slowdebug']),
               default='fastdebug', help='Set debug level')
 @click.option('--config_only', default=False, is_flag=True, help='Configure only, do not build')
-@click.option('--config_needed', '-c', default=False, is_flag=True, help='Run configure before build')
+@click.option('--config_needed/--no_config_needed', '-c', default=False, is_flag=True,
+              help='Run configure before build')
 @click.option('--target', '-t', type=click.Choice(['images', 'hotspot']), default='images',
               help='Specify build target, default is images')
 @click.option('--jobs', '-j', default=16, help='Specifies the number of jobs (commands) to run simultaneously. Default value is 16.')
@@ -34,13 +35,16 @@ def make_jdk(src, des, debug_level, config_only, config_needed, target, jobs, dr
     if debug_level == 'slowdebug':
         configure_cmd.append('--with-native-debug-symbols=internal')
 
+    build_cmd = ['make', target, 'JOBS='+str(jobs)]
+
     pprint.pprint(configure_cmd)
+    pprint.pprint(build_cmd)
 
     env = dict(os.environ, JAVA_HOME='/usr/lib/jvm/jdk13')
     if config_needed:
         run(configure_cmd, cwd=des, env=env)
     if not config_only:
-        run(['make', target, 'JOBS='+str(jobs)], cwd=des, env=env)
+        run(build_cmd, cwd=des, env=env)
 
 
 if __name__ == "__main__":
