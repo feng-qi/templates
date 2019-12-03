@@ -13,7 +13,7 @@ def print_comand(*args, **kwargs):
 @click.option('--src', '-s', type=Path, default=Path('~/repos/panama').expanduser(),
               help='Assign OpenJDK source code directory')
 @click.option('--des', '-d', type=Path, default=Path.cwd(), help='Assign build directory')
-@click.option('--debug_level', '-l', type=click.Choice(['fastdebug', 'slowdebug']),
+@click.option('--debug_level', '-l', type=click.Choice(['fastdebug', 'slowdebug', 'release']),
               default='fastdebug', help='Set debug level')
 @click.option('--config_only', default=False, is_flag=True, help='Configure only, do not build')
 @click.option('--config_needed/--no_config_needed', '-c', default=False, is_flag=True,
