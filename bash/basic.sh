@@ -194,6 +194,9 @@ case $yn in
     *) echo "Please answer yes or no." ;;
 esac
 
+# read from variable
+read -r _mode _cnt _score _discard _error _unit <<<${cur_row}
+
 # file
 #-----
 renaissance_data () {
@@ -208,3 +211,36 @@ renaissance_data () {
 
     echo -n -e "${data}"
 }
+
+
+# delete one column of vertical aligned file
+local _result=$(awk '{$2=""; print $0}' ${_file})
+# delete one column of csv file
+local _result=$(cut -d, -f2 --complement ${_file})
+
+#-------------- csv and ascii table -------------------------
+# 1. get last n columns
+#    care for utf8 chars when using rev
+cur_row=$(echo "${cur_row}" | rev | awk '{print $1,$2,$3}' | rev)
+cur_row=$(awk '{for(i=NF-5;i<=NF;i++) printf $i" "; print ""}' ${file})
+cur_row=$(echo "${cur_row}" | awk '{print $(NF-2)" "$(NF-1)" "$NF}')
+
+
+#-------------- caveat -------------------------
+# 1. for multiline strings like
+msg='
+one
+two
+three
+'
+# or
+IFS='' read -r -d '' msg <<EOF
+one
+two
+three
+EOF
+
+echo ${msg}                     # no newline printed
+# and
+echo "${msg}"                   # newline printed
+# gives different output
