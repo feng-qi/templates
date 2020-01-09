@@ -11,9 +11,13 @@ igv() {
     cd -
 }
 
-export JAVA_HOME=$HOME/builds/panama-fast/images/jdk
+export JAVA_HOME=$HOME/builds/panama/fastdebug/head/images/jdk
 export JAVA=$JAVA_HOME/bin/java
 export JAVAC=$JAVA_HOME/bin/javac
+
+export OJAVA_HOME=$HOME/builds/panama/fastdebug/origin/images/jdk
+export OJAVA=$OJAVA_HOME/bin/java
+export OJAVAC=$OJAVA_HOME/bin/javac
 
 options_comm="-XX:+UnlockDiagnosticVMOptions -XX:-TieredCompilation"
 options_vect="-XX:+TraceLoopOpts -XX:+Verbose -XX:+TraceLoopLimitCheck"

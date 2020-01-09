@@ -12,13 +12,15 @@ def print_comand(*args, **kwargs):
 
 @click.command()
 @click.option('--dry_run', default=False, is_flag=True, help='Only the show the command will be run')
+@click.option('--print_intrinsic/--no_print_intrinsic', default=False, is_flag=True,
+              help='Print intrinsification information')
 @click.option('--print_assembly/--no_print_assembly', default=False, is_flag=True,
               help='Print Assembly to file print_assembly.log')
 @click.option('--log_file', type=Path, default=Path('print_assembly.log'), help='Specify the file to save the log')
-@click.option('--java_home', type=Path, default=Path('~/builds/panama-fast/images/jdk').expanduser(),
+@click.option('--java_home', type=Path, default=Path('~/builds/panama/fastdebug/head/images/jdk').expanduser(),
               help='Specify the java home')
 @click.argument('file', nargs=-1, type=click.UNPROCESSED)
-def J(dry_run, print_assembly, log_file, java_home, file):
+def J(dry_run, print_intrinsic, print_assembly, log_file, java_home, file):
     if len(file) != 1:
         print('no file or more than one file given')
         quit(1)
@@ -33,16 +35,21 @@ def J(dry_run, print_assembly, log_file, java_home, file):
     file_no_ext = file.stem
 
     print_assembly_opts = [
-               '-XX:+UnlockDiagnosticVMOptions',
-               '-XX:+PrintAssembly',
-               '-XX:+DebugNonSafepoints',
-               '-XX:LogFile=' + str(log_file.expanduser()),
+        '-XX:+PrintAssembly',
+        # '-XX:+DebugNonSafepoints',
+        '-XX:LogFile=' + str(log_file.expanduser()),
     ] if print_assembly else []
+
+    print_intrinsic_opts = [
+        '-XX:+DebugVectorApi',
+    ] if print_intrinsic else []
 
     compile = [javac, *add_module, file]
     execute = [java, *add_module,
+               '-XX:+UnlockDiagnosticVMOptions',
                # '-XX:-UseVectorApiIntrinsics',
                *print_assembly_opts,
+               *print_intrinsic_opts,
                file_no_ext]
 
     pprint(execute)
