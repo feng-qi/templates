@@ -38,13 +38,12 @@ def make_jdk(src, run_in, debug_level, config_only, config_needed, target, jobs,
 
     build_cmd = ['make', target, 'JOBS='+str(jobs)]
 
-    pprint.pprint(configure_cmd)
-    pprint.pprint(build_cmd)
-
     env = dict(os.environ, JAVA_HOME='/usr/lib/jvm/jdk13')
     if config_needed:
+        pprint.pprint(configure_cmd)
         run(configure_cmd, cwd=run_in, env=env)
     if not config_only:
+        pprint.pprint(build_cmd)
         run(build_cmd, cwd=run_in, env=env)
 
 
