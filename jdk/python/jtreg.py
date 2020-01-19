@@ -15,13 +15,13 @@ def print_comand(*args, **kwargs):
 @click.option('--vector_api/--no_vector_api', default=False, is_flag=True,
               help="Don't use Vector API, no Vector API by default")
 @click.option('--dry_run', default=False, is_flag=True, help='Only the show the command will be run')
-@click.option('--jdk_home', default=str(home/'builds/panama-fast/images/jdk'), help='Specify the jdk to be tested')
+@click.option('--java_home', default=str(home/'builds/panama/fastdebug/head/images/jdk'), help='Specify the jdk to be tested')
 @click.option('--show_command', default=False, is_flag=True, help='Show the command will be run before running')
 @click.option('--print_assembly/--no_print_assembly', default=False, is_flag=True,
               help='Show the command will be run before running')
 @click.option('-v', '--verbose', default=False, is_flag=True, help='Enables verbose mode')
 @click.argument('files', nargs=-1, type=click.UNPROCESSED)
-def run_jtreg(files, vector_api, dry_run, jdk_home, verbose, show_command, print_assembly):
+def run_jtreg(files, vector_api, dry_run, java_home, verbose, show_command, print_assembly):
 
     run = print_comand if dry_run else check_call
 
@@ -44,11 +44,11 @@ def run_jtreg(files, vector_api, dry_run, jdk_home, verbose, show_command, print
     vmoptions = '-vmoptions:' + ' '.join(vmoptions)
 
     jtreg_cmd = [
-        home/"repos/jtreg/jtreg-hg/dist/jtreg/bin/jtreg",
+        home/"repos/jtreg/jtreg/bin/jtreg",
         '-othervm', '-a', '-ea', '-esa', '-server', '-ignore:quiet', '-timeoutFactor:16', '-J-Xmx4g', vmoptions,
         '-v:fail',
         # '-va',
-        '-testjdk:' + jdk_home,
+        '-testjdk:' + java_home,
         '-r:' + str(home/'jtoutput/JTReport'),
         '-w:' + str(home/'jtoutput/JTWork'),
         *files

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-export JT_JAVA=/usr/lib/jvm/jdk13
-export JT_HOME=$HOME/repos/jtreg/jtreg-hg/dist/jtreg
-alias jtreg='/home/qifen01/repos/jtreg/jtreg-hg/dist/jtreg/bin/jtreg'
-alias jtdiff='/home/qifen01/repos/jtreg/jtreg-hg/dist/jtreg/bin/jtdiff'
+# export JT_JAVA=/usr/lib/jvm/jdk13
+export JT_HOME=$HOME/repos/jtreg/jtreg
+# alias jtreg='/home/qifen01/repos/jtreg/jtreg-hg/dist/jtreg/bin/jtreg'
+# alias jtdiff='/home/qifen01/repos/jtreg/jtreg-hg/dist/jtreg/bin/jtdiff'
 
 igv() {
     local JT_HOME=/usr/lib/jvm/java-8-openjdk-arm64

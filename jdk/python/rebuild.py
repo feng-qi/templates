@@ -23,11 +23,15 @@ def rebuild(target, dry_run):
     )
     directory = dispatch[target].expanduser()
 
-    build_cmd = [
-        'mkjdk.py',
-        '--run_in', directory,
-    ]
-    run(build_cmd)
+    cmd_reconfigure = ['make', 'reconfigure']
+    cmd_build = ['mkjdk.py', '--run_in', directory]
+
+    try:
+        run(cmd_build)
+    except CalledProcessError:
+        print("Caught exception 'CalledProcessError', will try to reconfigure:", cmd_reconfigure)
+        run(cmd_reconfigure, cwd=directory)
+        run(cmd_build)
 
 
 if __name__ == "__main__":

@@ -23,7 +23,7 @@ def print_comand(*args, **kwargs):
 @click.option('--jobs', '-j', default=16, help='Specifies the number of jobs (commands) to run simultaneously. Default value is 16.')
 @click.option('--dry_run', default=False, is_flag=True, help='Only the show the command will be run')
 def make_jdk(src, run_in, debug_level, config_only, config_needed, target, jobs, dry_run):
-    print("Working run_in: " + str(run_in))
+    print("Working in: " + str(run_in))
 
     run = print_comand if dry_run else check_call
 
