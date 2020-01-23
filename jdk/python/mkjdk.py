@@ -9,6 +9,13 @@ def print_comand(*args, **kwargs):
     pprint.pprint(locals())
 
 
+def run_with_default_exit_code(*args, **kwargs):
+    try:
+        check_call(*args, **kwargs)
+    except CalledProcessError as e:
+        click.get_current_context().exit(e.returncode)
+
+
 @click.command()
 @click.option('--src', '-s', type=Path, default=Path('~/repos/panama').expanduser(),
               help='Assign OpenJDK source code directory')
@@ -25,7 +32,7 @@ def print_comand(*args, **kwargs):
 def make_jdk(src, run_in, debug_level, config_only, config_needed, target, jobs, dry_run):
     print("Working in: " + str(run_in))
 
-    run = print_comand if dry_run else check_call
+    run = print_comand if dry_run else run_with_default_exit_code
 
     configure_cmd = [
         'bash',

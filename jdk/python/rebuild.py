@@ -13,6 +13,7 @@ def get_branch_in(directory):
     cmd = ['git', 'rev-parse', '--abbrev-ref', 'HEAD']
     return p.check_output(cmd, cwd=directory.expanduser()).decode('utf-8').strip()
 
+
 def dir_has_branch(directory, branch):
     return get_branch_in(directory) == branch
 
@@ -38,10 +39,15 @@ def rebuild(ctx, target, repo, origin, dry_run):
     if 'origin' in target and not dir_has_branch(repo, origin):
         ctx.fail(f"{target} build: repo in '{build_dir}' does not have branch '{origin}'")
 
-    # cmd_reconfigure = ['make', 'reconfigure']
-    cmd_build = ['mkjdk.py', '--run_in', build_dir]
+    cmd_reconfigure = ['make', 'reconfigure']
+    cmd_build = ['mkjdk.py']
 
-    run(cmd_build)
+    try:
+        run(cmd_build, cwd=build_dir)
+    except CalledProcessError as e:
+        if e.returncode == 2:
+            run(cmd_reconfigure, cwd=build_dir)
+            run(cmd_build, cwd=build_dir)
 
 if __name__ == "__main__":
     rebuild()
