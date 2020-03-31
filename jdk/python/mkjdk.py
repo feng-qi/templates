@@ -53,6 +53,11 @@ def make_jdk(src, run_in, debug_level, config_only, config_needed, target, jobs,
         pprint.pprint(build_cmd)
         run(build_cmd, cwd=run_in, env=env)
 
+        if target == 'hotspot':
+            update_libjvm = ['cp', run_in/'jdk/lib/server/libjvm.so', run_in/'images/jdk/lib/server/libjvm.so']
+            pprint.pprint(update_libjvm)
+            run(update_libjvm , cwd=run_in, env=env)
+
 
 if __name__ == "__main__":
     make_jdk()
