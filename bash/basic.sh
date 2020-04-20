@@ -112,7 +112,7 @@ myfunc arg1 arg2
 
 # useful functions
 command_exists () {
-    type "$1" &> /dev/null ;
+    command -v "$1" &> /dev/null ;
 }
 
 package_installed () {
