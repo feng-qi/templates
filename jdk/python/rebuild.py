@@ -22,9 +22,9 @@ def dir_has_branch(directory, branch):
 @click.argument('target', type=click.Choice(
     ['release_head', 'release_origin', 'fastdebug_head', 'fastdebug_origin', 'slowdebug_head', 'slowdebug_origin',
      'jdk_release_head', 'jdk_release_origin', 'jdk_fastdebug_head', 'jdk_fastdebug_origin']))
-@click.option('--repo', default=Path('~/repos/panama').expanduser(), help='Specify which repo to use')
+@click.option('--repo', show_default=True, default=Path('~/repos/panama').expanduser(), help='Specify which repo to use')
 @click.option('--origin', '-o', default='vectorIntrinsics', help='Specify which branch is used as origin')
-@click.option('--dry_run', default=False, is_flag=True, help='Only the show the command will be run')
+@click.option('--dry-run', default=False, is_flag=True, help='Only the show the command will be run')
 @click.pass_context
 def rebuild(ctx, target, repo, origin, dry_run):
 

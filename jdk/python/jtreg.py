@@ -12,14 +12,15 @@ def print_comand(*args, **kwargs):
 
 
 @click.command()
-@click.option('--vector_api/--no_vector_api', default=True, is_flag=True,
-              help="Don't use Vector API, no Vector API by default")
-@click.option('--dry_run', default=False, is_flag=True, help='Only the show the command will be run')
-@click.option('--java_home', default=str(home/'builds/panama/fastdebug/head/images/jdk'), help='Specify the jdk to be tested')
-@click.option('--show_command', default=False, is_flag=True, help='Show the command will be run before running')
-@click.option('--add_vmoptions', type=str, help='Specify additional vmoptions')
-@click.option('--print_assembly/--no_print_assembly', default=False, is_flag=True,
-              help='Show the command will be run before running')
+@click.option('--vector-api/--no-vector-api', default=True, is_flag=True,
+              show_default=True, help="Don't use Vector API, no Vector API by default")
+@click.option('--dry-run', default=False, is_flag=True, help='Only the show the command will be run')
+@click.option('--java-home', default=str(home/'builds/panama/fastdebug/head/images/jdk'),
+              show_default=True, help='Specify the jdk to be tested')
+@click.option('--show-command', default=False, is_flag=True, help='Show the command will be run before running')
+@click.option('--add-vmoptions', type=str, help='Specify additional vmoptions')
+@click.option('--print-assembly/--no-print-assembly', default=False, is_flag=True,
+              show_default=True, help='Show the command will be run before running')
 @click.option('-v', '--verbose', default=False, is_flag=True, help='Enables verbose mode')
 @click.argument('files', nargs=-1, type=click.UNPROCESSED)
 def run_jtreg(files, vector_api, dry_run, java_home, verbose, show_command, print_assembly, add_vmoptions):
