@@ -7,7 +7,7 @@ from subprocess import CalledProcessError, check_call
 
 
 @click.command()
-@click.option('--dry-run', default=False, is_flag=True, help='Set --dry-run option for rsync')
+@click.option('--dry-run', '-n', default=False, is_flag=True, help='Set --dry-run option for rsync')
 @click.option('--pull', default=False, is_flag=True, help='Sync remote webrev content to local directory')
 def rsync(dry_run, pull):
 
