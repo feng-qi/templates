@@ -46,7 +46,10 @@ def J(dry_run, print_intrinsic, print_assembly, log_file, java_home, file, gen_g
         '-XX:+DebugVectorApi',
     ] if print_intrinsic else []
 
-    gen_graph = [ '-XX:PrintIdealGraphLevel=2', '-XX:PrintIdealGraphFile=' + file.stem + 'ideal.xml' ]
+    gen_graph = [
+        '-XX:PrintIdealGraphLevel=2',
+        '-XX:PrintIdealGraphFile=' + file.stem + 'ideal.xml',
+    ] if gen_graph else []
 
     compile = [javac, *add_module, file]
     execute = [java, *add_module,
