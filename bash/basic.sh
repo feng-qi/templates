@@ -10,6 +10,9 @@ COLR_NC='\033[0m' # No Color
 WARN='\033[0;31m[WARN]\033[0m'
 INFO='\033[0;32m[INFO]\033[0m'
 
+# get the directory that current script resides in
+SCRIPT_DIRECTORY="$(dirname -- $(readlink -f -- $0))"
+
 
 #-------------- sort -------------------------
 sort file                          # 排序文件
@@ -123,18 +126,52 @@ package_installed () {
 
 #-------------- loop & switch -------------------------
 # while
+
+SUPPORTED_TEST_CASES=(164.gzip 175.vpr 176.gcc 181.mcf 186.crafty 197.parser 252.eon 254.gap 255.vortex 256.bzip2 300.twolf)
+TEST_CASES=()
 while [ $# -gt 0 ]; do
-    case "$1" in
-        base)
-            install_utils
-            shift
+    case $1 in
+        -d|--directory)
+            SPEC_D="$2"
+            shift # past argument
+            shift # past value
+            ;;
+        -s|--testset)
+            TEST_SET="$2"
+            if [ "${TEST_SET}" != "test" ] && [ "${TEST_SET}" != "ref" ] && [ "${TEST_SET}" != "train" ]; then
+                echo "Unknown test set: ${TEST_SET}. Supported values are test, ref and train."
+                exit 1;
+            fi
+            shift # past argument
+            shift # past value
+            ;;
+        -c)
+            CAT_RESULT_FILE="true"
+            shift # past argument
+            ;;
+        -h|--help)
+            usage
+            exit 1
+            ;;
+        -*|--*)
+            echo -e "${WARN} Unrecognized Option: ${COLR_RED}$1${COLR_NC}"
+            usage
+            exit 1
             ;;
         *)
-            echo -e "${WARN} Unrecognized Argument: ${COLR_RED}$1${COLR_NC}"
-            exit 1
+            if [[ ! "${SUPPORTED_TEST_CASES[*]}" =~ "$1" ]]; then
+                echo -e "${WARN} Unknown test case: ${COLR_RED}$1${COLR_NC}"
+                exit 1
+            fi
+            TEST_CASES+=("$1") # save positional arg
+            shift # past argument
             ;;
     esac
 done
+
+if [ "${#TEST_CASES[*]}" -eq 0 ] ; then
+    TEST_CASES=( "${SUPPORTED_TEST_CASES[@]}" )
+fi
 
 local dry_run=false
 local need_compile=false
