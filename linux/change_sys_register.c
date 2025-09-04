@@ -1,7 +1,3 @@
-// The following two posts are referenced:
-//   - https://pradheepshrinivasan.github.io/2015/07/02/Creating-an-simple-sysfs/
-//   - https://nihaal.me/post/creating_sysfs_files/
-
 #include <linux/module.h>
 #include <linux/printk.h>
 #include <linux/kobject.h>
@@ -41,6 +37,23 @@ static void CMC_disable(void* unused)
     // pr_info("CMC disabled\n");
 }
 
+#define PF_MODE_SHIFT                     11
+#define PF_MODE_MASK                      (0xful << PF_MODE_SHIFT)
+#define PF_MODE_1001                      9ul
+static void HW_Prefetching_set_PF_MODE(void* info)
+{
+    u64 cr;
+    u64 mode = (u64)info;
+    mode <<= PF_MODE_SHIFT;
+
+    asm volatile("mrs %0, S3_0_C15_C1_5" : "=r"(cr));
+    isb();
+    cr &= ~PF_MODE_MASK;
+    cr |= mode;
+    asm volatile("msr S3_0_C15_C1_5, %0" : :"r"(cr));
+    isb();
+}
+
 static void HW_Prefetching_enable(void* unused)
 {
     u64 cr;
@@ -49,6 +62,7 @@ static void HW_Prefetching_enable(void* unused)
     cr &= ~PF_DIS_MASK;
     asm volatile("msr S3_0_C15_C1_4, %0" : :"r"(cr));
     isb();
+    HW_Prefetching_set_PF_MODE((void*)PF_MODE_1001);
     // pr_info("HW_Prefetching enabled\n");
 }
 
@@ -93,10 +107,12 @@ static void print_IMP_CPUECTLRx_EL1(void* unused)
     pr_info("IMP_CPUECTLR_EL1  : %#llx\n"
             "IMP_CPUECTLR2_EL1 : %#llx\n"
             "HW_Prefetching    : %s\n"
+            "PF_MODE           : %#llx\n"
             "CMC               : %s\n"
             "CBUSY_DYNAMIC     : %s\n",
             cr1, cr2,
             (cr1 & PF_DIS_MASK)              ? disabled : enabled,
+            ((cr2 & PF_MODE_MASK) >> PF_MODE_SHIFT),
             (cr1 & CMC_MIN_WAYS_MASK)        ? enabled : disabled,
             (cr2 & TXREQ_LIMIT_DYNAMIC_MASK) ? enabled : disabled);
 
@@ -116,35 +132,41 @@ static ssize_t foo_show(struct kobject *kobj, struct kobj_attribute *attr,
                    "IMP_CPUECTLR_EL1  : %#llx\n"
                    "IMP_CPUECTLR2_EL1 : %#llx\n"
                    "HW_Prefetching    : %s\n"
+                   "PF_MODE           : %#llx\n"
                    "CMC               : %s\n"
                    "CBUSY_DYNAMIC     : %s\n",
                    cr1, cr2,
                    (cr1 & PF_DIS_MASK)              ? disabled : enabled,
+                   ((cr2 & PF_MODE_MASK) >> PF_MODE_SHIFT),
                    (cr1 & CMC_MIN_WAYS_MASK)        ? enabled : disabled,
                    (cr2 & TXREQ_LIMIT_DYNAMIC_MASK) ? enabled : disabled);
 }
 
+#define SUPPORT_ARG_NUM 4
 static ssize_t foo_store(struct kobject *kobj, struct kobj_attribute *attr,
                          const char *buf, size_t count)
 {
-    char field[3][20];
-    u32  turn_on[3] = {0};
-    int  input_count = sscanf(buf, "%s %d %s %d %s %d",
+    char field[SUPPORT_ARG_NUM][20];
+    u64  turn_on[SUPPORT_ARG_NUM] = {0};
+    int  input_count = sscanf(buf, "%s %llu %s %llu %s %llu %s %llu",
                               field[0], &turn_on[0],
                               field[1], &turn_on[1],
-                              field[2], &turn_on[2]);
+                              field[2], &turn_on[2],
+                              field[3], &turn_on[3]);
 
-    if (input_count != 2 && input_count != 4 && input_count != 6) {
+    if (input_count != 2 && input_count != 4 && input_count != 6 && input_count != 8) {
         print_IMP_CPUECTLRx_EL1(NULL);
         return count;
     }
 
     for (int i = 0; i < input_count / 2; i++) {
         char* config = field[i];
-        u32 on       = turn_on[i];
+        u64 on       = turn_on[i];
         if (strcmp(config, "pf") == 0) {
             if (on) on_each_cpu(HW_Prefetching_enable, NULL, 1);
             else    on_each_cpu(HW_Prefetching_disable, NULL, 1);
+        } else if (strcmp(config, "pf_mode") == 0) {
+            on_each_cpu(HW_Prefetching_set_PF_MODE, (void*)on, 1);
         } else if (strcmp(config, "cmc") == 0) {
             if (on) on_each_cpu(CMC_enable, NULL, 1);
             else    on_each_cpu(CMC_disable, NULL, 1);
@@ -163,7 +185,7 @@ static ssize_t foo_store(struct kobject *kobj, struct kobj_attribute *attr,
 }
 
 
-static struct kobj_attribute foo_attribute =__ATTR(foo, 0664, foo_show, foo_store);
+static struct kobj_attribute foo_attribute = __ATTR(foo, 0664, foo_show, foo_store);
 
 static int __init mymodule_init (void)
 {

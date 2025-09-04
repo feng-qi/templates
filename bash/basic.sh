@@ -118,6 +118,11 @@ command_exists () {
     command -v "$1" &> /dev/null ;
 }
 
+process_exists () {
+    local pid=$1
+    kill -0 "$pid" &> /dev/null ;
+}
+
 package_installed () {
     dpkg -s "$1" &> /dev/null ;
     # dpkg-query -l "$1" &>/dev/null ;
